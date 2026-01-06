@@ -85,14 +85,15 @@ This project contains my Master Exam (planning, writing, ...)
 ### To Do
 
 Next steps:
-- Implement a Ray-Tracing (maybe there is a python lib for that?) 
-  - Send every 10 degree a beam and calc 3 bounces (end of image = no bounce)
-  - Every Ray Tracing saved as own Gray Image
-
-- Cosmos Model evaluation -> waiting until bianca is finish
-  - Maybe Checkout PhysiX again, now accessible? -> Is more promising than Cosmos
-
-- Start Pix2Pix Residual with SSIM Loss higher
+- Make final 4 Experiments + compare/save the results
+  - Without Ray-Tracing
+  
+  - With Ray-Tracing Only
+  
+  - With Ray-Tracing on the image
+  
+  - With Ray-Tracing as second channel
+  
 
 
 
@@ -152,6 +153,16 @@ Location: Google Meeting<br>
 Time: 11:35 O'Clock
 
 - ...
+
+
+
+**09.01.2026 Weekly Meeting**<br>
+
+Participants: Keuper, Martin, Ich<br>
+Location: Google Meeting<br>
+Time: 11:35 O'Clock
+
+- Fraunhofer?
 
 
 

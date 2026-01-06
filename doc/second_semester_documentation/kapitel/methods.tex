@@ -1,9 +1,13 @@
-\chapter{Methods}
-\label{cha:methods}
+% Method / Approach ?-> What name? Look how the inspire paper called it
 
+\chapter{Method}
+\label{cha:intro}
+	
+	% Your project is to find ways to improve the learning of complex relationships / sound-propagation.
+	
 	\section{Data}
 	\label{sec:method-data}
-	We run all experiments on the \textbf{PhysicsGen}-Benchmark \cite{martin_spitznagel_physicsgen_2025}, which provides 2D wave-propagation simulations across urban environments. The dataset contains approximately \textbf{20.000} training, \textbf{2.000} test, and \textbf{1.200} evaluation samples with the official split. Each sample is available in four variations that differ in physical complexity:
+	We run all experiments on the \textbf{PhysicsGen}-Benchmark \cite{martin_spitznagel_physicsgen_2025}, which provides 2D wave-propagation simulations across urban environments. The dataset contains \textbf{19.908} training, \textbf{3.732} validation, and \textbf{1.244} test samples (for evaluation) with the official split. Each sample is available in four variations that differ in physical complexity:
 	\begin{itemize}[itemsep=0pt, topsep=0pt, parsep=0pt, partopsep=0pt]
 		\item \textbf{Base-Propagation}
 		\item \textbf{Base-Propagation + Reflection}
@@ -11,8 +15,8 @@
 		\item \textbf{Base-Propagation + Reflection + Diffraction}
 	\end{itemize} 
 	In this study, we focus on the \textbf{reflection} variation, as it represents a balanced level of complexity \cite{martin_spitznagel_physicsgen_2025} while still exposing the performance limitations of existing learning-based approaches, as noted in the original PhysicsGen publication.\\
-	Each sample consists of a 2D gray-image representing the physical scene - specifically, the image indicates the locations of buildings, which are the main obstacles for sound propagation in urban areas – along with the corresponding simulated wave-intensity distribution from a fixed transmitter. \\
-	All datapoints are collected from 3 cities in Germany \cite{martin_spitznagel_physicsgen_2025} and the ground-truth is created via NoiseModelling, a physical simulation software \cite{noisemodelling}.\\
+	Each sample consists of a 2D 256x256 gray-image representing the physical scene - specifically, the image indicates the locations of buildings, which are the main obstacles for sound propagation in urban areas – along with the corresponding simulated wave-intensity distribution from a fixed transmitter. \\
+	All datapoints are collected from 3 cities in Germany \cite{martin_spitznagel_physicsgen_2025} and the ground-truth is created via NoiseModelling \cite{noisemodelling}, a physical simulation software \cite{noisemodelling}.\\
 	For evaluation, we make a distinction between \textbf{line-of-sight (LoS)} regions and \textbf{non-line-of-sight (NLoS)} regions, where NLoS areas exhibit stronger interactions with environmental structures. Modeling these physically complex regions is a primary focus of this work.
 	
 	
@@ -34,28 +38,29 @@
 	We use a standard Pix2Pix conditional generative architecture as our primary baseline, due to its fast training and accurate result capabilities shown in the Physgen Paper \cite{martin_spitznagel_physicsgen_2025}. The generator is a U-Net with skip connections, and the discriminator follows a PatchGAN design.\\
 	We introduce the following modifications:
 	\begin{itemize}[itemsep=0pt, topsep=0pt, parsep=0pt, partopsep=0pt]
-		\item optional pre-masking and post-masking
-		\item an additional physical-information channel (ray-tracing) without a specific fusion component
-		\item a combined weighted loss *(add formular with weights/losses or add loss-component names?)
+		\item Optional pre-masking and post-masking.
+		\item An additional physical-information channel (ray-tracing) without a specific fusion component.
+		\item A combined weighted loss, defined as a weighted combination of SiLog, L1, SSIM, blur, edge-aware, gradient L1, variance, and min–max range losses. The weighting coefficients vary across experiments and are specified in the corresponding experimental sections. This composite loss was introduced to better capture reflection-related effects, which are insufficiently modeled by simpler loss formulations.
 	\end{itemize} 
 	
 	\clearpage
 	
 	\subsection{Pix2Pix Residual Design}
 	We additionally introduced the Pix2Pix Residual Design Model, which we also use here and which we developed in our previous work. This model consists of two Pix2Pix networks and a CNN fusion head (optionally replaceable by a simple formula-based calculation) that combines the predictions of both networks to the final prediction. The task is divided into two subtasks: baseline propagation and the complex-only component (reflections). The target for the complex-only component is obtained by subtracting the baseline sound propagation from the reflection sound propagation, since the reflection inherently includes the baseline.\\
-	Although this model achieved poor accuracies \cite{first_semester_report}, our previous investigation showed that this was caused by the complex-only prediction, which frequently converged to a local minimum (a nearly uniform gray image). This occurs because the target values are very close to each other *[show histogram]. Prior work introduced a loss-weighting mechanism based on the histogram, as well as additional variance and min/max losses, to mitigate this issue and improve performance.
+	Although this model achieved poor accuracies \cite{first_semester_report}, our previous investigation showed that this was caused by the complex-only prediction, which frequently converged to a local minimum (a nearly uniform gray image). This occurs because the target values are very close to each other \cite{first_semester_report}. Prior work introduced a loss-weighting mechanism based on the histogram, as well as additional variance and min/max losses, to mitigate this issue and improve performance.
 	
 	
 	\subsection{Cosmos Predict 2 (Video2World)}
-	We further evaluate the \textbf{Cosmos Predict 2 Video2World} model from NVIDIA, a large transformer-based world-model originally designed for multimodal environment prediction. \\
-	In our setup, the model receives the PhysicsGen scene representation as input and predicts the resulting wave-intensity map in a single forward pass. The model is used with its default architecture but adapted to accept PhysicsGen-style 2D grids.
+	We further evaluate the Cosmos Predict 2 Video2World model from NVIDIA \cite{nvidia2025cosmosworldfoundationmodel}, a large transformer-based world model originally designed for multimodal environment prediction.
+	In our setup, the official PhysicsGen dataset was converted into a video by repeating the input channels along the temporal dimension using OpenCV. We employed the Google T5-11B pretrained tokenizer and applied the normalization from the official Cosmos-2 implementation.
 	
 	
 	
 	\section{Ray-Tracing Baseline}
 	\label{sec:method-rays}
-	To provide a physically interpretable reference for the model, we implement a lightweight 2D ray-tracing simulation. The algorithm computes x-order reflection paths without calculating the ray energies, in order to keep the complexity and computational cost low. Although much simpler than a full wave simulation, this baseline may still help to predict reflection patterns.\\
-	We used third-order reflections with 36 and 360 rays as one and as multiple channels in our experiments.
+	To provide a physically interpretable reference for the model, we implement a lightweight 2D ray-tracing simulation \cite{img-phy-sim} which is part-wise inspired by the Digital Differential Analyzer algorithm and works direct on pixel-level. The algorithm computes x-order reflection paths without calculating the ray energies, in order to keep the complexity and computational cost low. Although much simpler than a full wave simulation, this baseline may still help to predict reflection patterns.\\
+	We used third-order reflections with 36 and 360 rays as one and as multiple channels in our experiments.\\
+	The selected options vary across experiments and are described in detail in the corresponding experimental sections.
 	
 	\clearpage
 	
@@ -63,8 +68,8 @@
 	\label{sec:method-training}
 	All models are trained using the Adam optimizer with a learning rate of \(5 \times 10^{-5}\), \(\beta_1 = 0.5\), and \(\beta_2 = 0.999\).\\
 	The batch size is set to 64 or 128 unless GPU memory constraints require reduction.
-	Training is performed for 50 to 100 epochs, with early stopping based on validation loss. These numbers are taken from \citetitle{martin_spitznagel_physicsgen_2025}.\\
-	The combined weighted loss is most likely used for the complex only model and else a L1-loss is used for Pix2Pix with a small adversarial loss for sharper predictions. Cosmos Predict 2 uses its native reconstruction loss.\\
+	Training is performed for 50 to 100 epochs, with early stopping based on validation loss. These numbers are taken from \citetitle{martin_spitznagel_physicsgen_2025} .\\
+	The combined weighted loss is used for the complex only model and else a L1-loss is used for Pix2Pix with a small adversarial loss for sharper predictions. Cosmos Predict 2 uses its native reconstruction loss.\\
 	All experiments are based on PyTorch 2.1, CUDA 12.2 \& 13.0, and Python 3.12. While the evaluation script (again officially taken from PhysicsGen \cite{martin_spitznagel_physicsgen_2025}) uses Python 3.8 in order to fulfill all requirements.
 	
 	
@@ -80,7 +85,7 @@
 	
 	\section{Evaluation Metrics}
 	\label{sec:method-eval}
-	We evaluate all methods using:
+	We use the same evaluate methods as from the official PhysicsGen-Benchmark:
 	\begin{itemize}[itemsep=0pt, topsep=0pt, parsep=0pt, partopsep=0pt]
 		\item Mean Absolute Error (MAE)
 		\item Weighted Mean Absolute Percentage Error (wMAPE)
@@ -96,6 +101,22 @@
 	%and \cite{eckerle2025realtimepredictionurbansound}
 	
 	
+	% really in method part?
+	%\section{Research Questions}
+	%\label{sec:method-research-question}
+	%	This study investigates the following:
+	%	\begin{enumerate}[itemsep=0pt, topsep=0pt, parsep=0pt, partopsep=0pt]
+		%		\item Performance of a fine-tuned Residual Design Pix2Pix Model.
+		%		\item Influence of pre- and post-masking on predicting physically complex regions.
+		%		\item Effect of integrating ray-tracing information as an additional model input.
+		%		\item Performance of a large transformer-based world-model for 2D wave-propagation prediction.
+		%	\end{enumerate} 
+	%	These questions directly target known weaknesses of existing learning-based methods on the PhysicsGen benchmark and answer the global question of whether deep learning models can learn complex relationships in a image-to-image scenario.
 	
+	
+
+
+
+
 
 
