@@ -162,7 +162,21 @@ Participants: Keuper, Martin, Ich<br>
 Location: Google Meeting<br>
 Time: 11:35 O'Clock
 
-- Fraunhofer?
+- Master -> Ich kann das bei Fraunhofer machen ODER eben weiter bei der HS mit Martin
+- Passt teils nicht mehr zum Stundenplan (wiss. Schreiben)
+- Muss eingereicht werden -> ist das ok? (URAI?) oder muss es eigentlich geheim bleiben?
+- Fraunhofer kann auch später angemeldet werden
+- Alternative: NCA Thematik weiter machen -> Mit zellulären Automaten PhysicsBenchmark versuchen zu lösen -> erfordert Schritte, pipeline müsste man nochmal intensiv bearbaeiten und überhaupt erstmal ohne Änderung zum Laufen bekommen
+- Meine Aufgaben bei HS:
+  - Trainingspipeline untersuchen
+    - GPU-Utility nochmals testen (eventuell von Pipelin nicht von mir)
+    - Funktioniert Batch-Size?
+
+  - Benchmark um schrittweise simulation erweitern
+    - Dazu Datapipeline zum Laufen bekommen
+    - Schrittweise Generierung hinzufügen
+
+- Wenn finale Experimente Ergebnisse haben, dann Bescheid geben
 
 
 
