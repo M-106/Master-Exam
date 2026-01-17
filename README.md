@@ -154,6 +154,32 @@ Time: 11:35 O'Clock
 
 - ...
 
+**16.01.2026 Weekly Meeting**<br>
+
+Participants: Keuper, Martin, Ich<br>
+Location: Google Meeting<br>
+Time: 11:35 O'Clock
+
+- Ergebnisse gezeigt (Zwischenergebnisse)
+	- tatsächlich sind die Ergebnisse an sich schlecht, aber trotzdem eine starke Verbesserung zu ohne den simplen ray-traces, was einen großen Erfolg darstellt
+- Wenn das Raytracing-tool gute Ergebnisse liefert wäre sehr hilfreich
+- Wenn mehr traces -> dann besser? (qualitative Beurteilung: nein)
+- Aktuelles Problem:
+	- Mein Raytracing ist: deterministisch, discrete ray-traces, no physical simulation
+	- Noise-Simulation: stochatic, continued reflexion-distribution, physically correct 
+- GPU Beschleunigung implementieren und/oder CPU Paralellisierung (wenn noch nicht geschehen)
+	- aktuell schon in Verwendung?
+- für bericht tool dann reinpacken
+- evaulation with thresholding -> multiplication
+- Schritte:
+	- Quantitative Messbarkeit erzeugen -> was macht hier sinn?
+		- Liegen alle einfachen Reflektionen auf den Ground-Truth-Reflektionen? (ABER, dadurch, dass es kein Energieverlust gibt könnten die einfachen Reflektionen länger sein)
+		- Gibt es für jede Ground Truth Reflektionen auch ein selbst-berechneten Ray?
+		- Schwierigkeit: Ground Truth Reflektionen nicht als einzelne Rays verfügbar, es sind mehr "wolken" oder größere Reflektionen, es wird anders physikalischer berechnet und nicht 360 einzelne Linien/Rays
+		- Prof hat etwas von thresholding Multiplizieren der beiden gemeint...was könnte er gemeint haben?
+	- Verbesserung/Anpassen des Raytracings
+	- Performance optimieren (erstmal keine prio)
+- Mach letzte Experimente fertig, aber danach nicht mehr relevant -> konzentrier dich auf Raytracing-Tool
 
 
 **09.01.2026 Weekly Meeting**<br>
@@ -495,7 +521,7 @@ Location: Zoom<br>
 Time: 13:00 O'Clock
 
 - Implementing Depth Anything and try out training + evaluation (self assigned)
-  - Maybe try to implement into the forked pix2pix repo -> https://github.com/xXAI-botXx/paired_image-to-image_translation/ from https://github.com/DepthAnything/Depth-Anything-V2
+  - Maybe try to implement into the forked pix2pix repo -> https://github.com/M-106/paired_image-to-image_translation/ from https://github.com/DepthAnything/Depth-Anything-V2
   - Without Conditioning -> Sound Source is fix
   - The Pipeline of them
   - The Pipeline of Pix2Pix
