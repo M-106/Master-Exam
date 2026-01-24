@@ -1,0 +1,107 @@
+\chapter{Ray-Tracing Framework}
+\label{cha:ray-tracing-framework}
+
+	In order to provide additional physical information for deep learning models, we created a framework for 2D ray-tracing on images, called "img-phy-sim" (which stands for Image-Physics-Simulation) \cite{img-phy-sim}.\\
+	Our Ray-Tracing Framework Framework is a python package, which provides a suite of tools for simulating, analyzing, and visualizing rays (beams) in 2D images, along with general-purpose image and mathematical utilities.\\
+	Our framework is available under \href{https://pypi.org/project/img-phy-sim/}{https://pypi.org/project/img-phy-sim/}.\\
+	The Image-Physics-Simulation package consists of 6 modules. The 2 main modules are \textbf{ray\_tracing} and \textbf{ism}. Both are for computing reflections but with 2 different approaches.\\
+	The \textbf{img}-module provides functionalities for images, like saving, loading and visualizing images.\\
+	Some math utilities are provides by the `math`-module. Additionally there are PhysicsGen-specific 2 modules. One to load PhysicsGen data via HuggingFace (\textbf{data}) and another to measure the coverage/accuracy of rays and reflection image, which is intended to measure how good the coverage from our framework towards the reflections from the PhysicsGen dataset is. For that the evaluation provides F1, Recall and Precision metrices.
+	
+	% Show short usage code + href to the 
+	Listing \ref{lst:example-framework-1} show the general usage to using ray-tracing with our framework.
+	
+	\begin{lstlisting}[language=Python,caption=Tracing Rays using our Framework (Pseudo-Code), label=lst:example-framework-1]
+		rays = ips.ray_tracing.trace_beams(...)
+		ips.ray_tracing.print_rays_info(rays)
+		
+		ray_img = ips.ray_tracing.draw_rays(...)
+		ips.img.imshow(ray_img, size=5)
+	\end{lstlisting}
+
+	And Listing \ref{lst:example-framework-2} show the general usage to using ISM-ray-tracing with our framework.
+
+	\begin{lstlisting}[language=Python,caption=Tracing Rays using our Framework via ISM (Pseudo-Code), label=lst:example-framework-2]
+		reflection_map = ips.ism.compute_reflection_map(...)
+		
+		ray_img = ips.ism.reflection_map_to_img(reflection_map)
+		ips.img.imshow(ray_img, size=5)
+	\end{lstlisting}
+
+
+	% Explain the 2 min modules
+	As said, the core of our framework is the ray-tracing itself and we provide 2 approaches of ray-tracing. The standard way of ray-tracing is sending ray-beams on an image in multiple directions. For example we send 360 ray-beams in different directions and "follow" the path with Bresenham's algorithm \cite{bresenham_algorithm_1965} until it hit the border or an object (a given pixel value). Next we have to calculate the reflection and this needs a preparated mapping which gives us the angle of the building/object-edge. This is done by first finding all edges via canny-edge detection \cite{canny}, then the single lines of all founded contours are used to find the direction.\\
+	This algorithm works on pixel-level and can be adjusted by multiple parameters, for example it can be stored iterative, the order of reflections can be set and bouncing of the image border can be turned on. 
+	% add ISM method
+	%The ISM approach is fundamental different and follows the opposite workflow compared to the standard ray-tracing algorithm: first finding walls for reflections and then computing the specific path of the rays \cite{ism}. It uses the mirror-effect, so that reflections are simply a straight molded line. All walls converts to image sources, sources where we mirror the rays (therefore the name image source method).
+	%We used the shapely library for most of those computations.
+	The ISM approach is fundamentally different and follows the opposite workflow compared to the standard ray-tracing algorithm: instead of first computing the specific path of the rays and then finding walls for reflections, it first identifies walls for reflections and then computes the corresponding ray paths \cite{ism}. It uses the mirror effect, so that reflections can be modeled as straight lines. Each wall gets an image source, in other words they gets a mirrored version of the source across the wall (hence the name image source method). We used the shapely library for most of these computations.
+	%This process is reallized with a function \textbf{compute_reflection_map(...)} that builds wall geometry from an input image, precomputes image sources for reflection sequences up to max_order, and evaluates valid propagation paths from a source to a grid of receiver points. The image is first converted into a wall mask to extract wall segments and an occlusion map, after which all reflection sequences and their image sources are precomputed. For each receiver point, we reconstruct possible paths, keep only those that pass a raster visibility check, and accumulate either the number of valid paths (mode="count") or a distance-attenuated energy contribution with per-reflection loss (mode="energy"), finally writing the result into an output map and optionally converting it to a dB scale.
+	
+	% Iterative
+	Rays also can be computed iterativly for every timestep or X timesteps. In contrast to the standard ray representation, which is implemented as a nested list, the iterative‑ray representation is encapsulated in the dedicated \textbf{RayIterator} class. This class provides its own interface and associated methods, which restricts direct list‑like operations. Nevertheless, most interactions remain analogous to those supported by the standard rays (for example the save and open functions). For instance, indexing is still available, although it indexes only on the most recent iteration. Other iterations can be accessed either by treating the object as an iterator, by accessing the \textbf{rays\_collection} attribute, or by calling the \textbf{get\_iteration} class-method.
+	Example python code is listed in Listing \ref{lst:example-framework-3}.\\ 
+	The reflection-map from ISM also have an optional iterative form. This is not a class like the \textbf{RayIterator} but just multiple reflection-maps in a list.
+	
+	\begin{lstlisting}[language=Python,caption=Iterative Rays from our Framework (Pseudo-Code), label=lst:example-framework-3]
+		rays_ = ips.ray_tracing.trace_beams(
+										...
+										iterative_tracking=True,
+										iterative_steps=None
+										)
+		
+		ray_imgs = ips.ray_tracing.draw_rays(rays_, ...)
+		ips.img.imshow(ray_imgs[0], size=8)
+		rays_.reduce_to_x_steps(5)  # reduce timesteps
+	\end{lstlisting}
+	
+	Details to all functions and parameters can be observed in the \href{https://m-106.github.io/Image-Physics-Simulation/img_phy_sim}{online documentation}.\\
+	Examples are provided on \href{https://github.com/M-106/Image-Physics-Simulation/blob/main/example/physgen.ipynb}{our github repository}.
+	
+	The difference of these 2 methods can be seen in figure \ref{fig:img-phy-sim-three_images}.
+	
+	\begin{figure}[ht]
+	\centering
+		
+	\resizebox{0.89\textwidth}{!}{
+	\begin{minipage}{\textwidth}
+		\centering
+			
+		% First row: two images
+		\begin{subfigure}{0.48\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../../uploaded/img/ray_tracing_example.jpeg}
+			\caption{Example Reflections using classic ray-tracing with 36 ray-beams.}
+			\label{fig:img-phy-sim-1}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{0.48\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../../uploaded/img/ray_tracing_example_many.jpeg}
+			\caption{Example Reflections using classic ray-tracing with 360 ray-beams.}
+			\label{fig:img-phy-sim-2}
+		\end{subfigure}
+		
+		\vspace{0.8cm}
+		
+		% Second row: single centered image
+		\begin{subfigure}{0.7\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../../uploaded/img/ism_example.jpeg}
+			\caption{Example Reflections using ISM.}
+			\label{fig:img-phy-sim-3}
+		\end{subfigure}
+		
+		\caption{Example ray-traces on PhysicGen data using our Framework img-phy-sim.}
+		\label{fig:img-phy-sim-three_images}
+	\end{minipage}%
+	}
+
+	\end{figure}
+	
+	
+
+
+
+
+

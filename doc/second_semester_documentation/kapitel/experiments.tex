@@ -6,6 +6,59 @@
 	% Implementation & Challenges
 	% Results
 	
+	
+	\section{Only Reflections on PhysicsGen}
+		% Description
+		After the good looking results and good accuracies from the prediction of only the reflection with the dataset with few buildings, we also trained a model with the same parameters on PhysicsGen Data and directly in a Residual Design model.
+		
+		% Implementation & Challenges
+		
+		
+		% Results
+		bad...show image,...
+		
+		The reason for these low accuracy results could be the higher complexity of the dataset.\\
+		Hence we started a deeper investigation towards the improvement of predicting reflections by adding additional information to reduce the lernable complexity, see section \ref{cha:experiment-reflection-additional_physics}.
+		
+		
+	
+	\section{Only Reflections with additional Physical Information}
+	\label{cha:experiment-reflection-additional_physics}
+		% Description
+		
+		
+		% Implementation & Challenges
+		
+		
+		% Results
+		
+		
+	\section{Investigation into additional Physical Information}
+	\label{cha:experiment-investigation-additional_physics}
+		% Description
+		
+		
+		% Implementation & Challenges
+		
+		
+		% Results
+	
+	
+	
+	\section{Pre/Post-Masking}
+		% Description
+		Independent from our other and previous experiments we were curious about the effect of pre- and/or post-masking during train time. The idea is that the model can focus on only a small part at one time and might be able to learn the complex reflection behaviours.
+		
+		% Implementation & Challenges
+		We simply show and compute the loss only for one block of the image and change this block every iteration. Pre-masking is done at the first 80\% of the whole train time and then the trining continues without masking.\\
+		We call Post-masking the training, where we train the first 50\% as usual and the last 50\% are trained masked.
+		
+		% Results
+		
+		
+	
+	
+	
 
 
 	
