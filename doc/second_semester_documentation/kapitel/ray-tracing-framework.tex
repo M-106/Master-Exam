@@ -41,18 +41,20 @@
 	% Iterative
 	Rays also can be computed iterativly for every timestep or X timesteps. In contrast to the standard ray representation, which is implemented as a nested list, the iterative‑ray representation is encapsulated in the dedicated \textbf{RayIterator} class. This class provides its own interface and associated methods, which restricts direct list‑like operations. Nevertheless, most interactions remain analogous to those supported by the standard rays (for example the save and open functions). For instance, indexing is still available, although it indexes only on the most recent iteration. Other iterations can be accessed either by treating the object as an iterator, by accessing the \textbf{rays\_collection} attribute, or by calling the \textbf{get\_iteration} class-method.
 	Example python code is listed in Listing \ref{lst:example-framework-3}.\\ 
-	The reflection-map from ISM also have an optional iterative form. This is not a class like the \textbf{RayIterator} but just multiple reflection-maps in a list.
+	The reflection-map from ISM also have an optional iterative form. This is not a class like the \textbf{RayIterator} but just multiple reflection-maps in a list. The iterations are not on pixel-level (as it is with the classical method) but on ray-level. This can be seen in figure \ref{fig:img-phy-sim-iter_images}.
+	
+	\vspace{0.8cm}
 	
 	\begin{lstlisting}[language=Python,caption=Iterative Rays from our Framework (Pseudo-Code), label=lst:example-framework-3]
-		rays_ = ips.ray_tracing.trace_beams(
-										...
-										iterative_tracking=True,
-										iterative_steps=None
-										)
-		
-		ray_imgs = ips.ray_tracing.draw_rays(rays_, ...)
-		ips.img.imshow(ray_imgs[0], size=8)
-		rays_.reduce_to_x_steps(5)  # reduce timesteps
+	rays_ = ips.ray_tracing.trace_beams(
+									...
+									iterative_tracking=True,
+									iterative_steps=None
+									)
+	
+	ray_imgs = ips.ray_tracing.draw_rays(rays_, ...)
+	ips.img.imshow(ray_imgs[0], size=8)
+	rays_.reduce_to_x_steps(5)  # reduce timesteps
 	\end{lstlisting}
 	
 	Details to all functions and parameters can be observed in the \href{https://m-106.github.io/Image-Physics-Simulation/img_phy_sim}{online documentation}.\\
@@ -97,6 +99,39 @@
 	\end{minipage}%
 	}
 
+	\end{figure}
+
+
+	\begin{figure}[ht]
+		\centering
+		
+		\resizebox{1.0\textwidth}{!}{
+			\begin{minipage}{\textwidth}
+				\centering
+				
+				% First row: single image
+				\begin{subfigure}{1.0\textwidth}
+					\centering
+					\includegraphics[width=\linewidth]{../../uploaded/img/ray_tracing_iterative_example.jpeg}
+					\caption{Example Iterative Reflections using classical ray-tracing. Images progress in time from top left to top right, then continue from bottom left to bottom right.}
+					\label{fig:img-phy-sim-iter-1}
+				\end{subfigure}
+				
+				\vspace{1.4cm}
+				
+				% Second row: single centered image
+				\begin{subfigure}{1.0\textwidth}
+					\centering
+					\includegraphics[width=\linewidth]{../../uploaded/img/ism_ray_tracing_iterative_example.jpeg}
+					\caption{Iterative reflections using ISM. Images progress in time from top left to top right, then continue from bottom left to bottom right.}
+					\label{fig:img-phy-sim-iter-2}
+				\end{subfigure}
+				
+				\caption{Example iterative version of ray-traces on PhysicGen data using our Framework img-phy-sim. The classical method is on pixel-level iterative and the ISM is iterative on ray-level.}
+				\label{fig:img-phy-sim-iter_images}
+			\end{minipage}%
+		}
+		
 	\end{figure}
 	
 	

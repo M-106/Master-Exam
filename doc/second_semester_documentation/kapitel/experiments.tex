@@ -8,42 +8,166 @@
 	
 	
 	\section{Only Reflections on PhysicsGen}
+	\label{cha:experiment-only-reflections}
 		% Description
-		After the good looking results and good accuracies from the prediction of only the reflection with the dataset with few buildings, we also trained a model with the same parameters on PhysicsGen Data and directly in a Residual Design model.
+		After the visual good looking results and high accuracies from the prediction of only the reflection with the dataset with few buildings, we also trained a model with the same parameters on PhysicsGen Data. But we directly used a Residual Design model not a basic Pix2Pix which would be better, but on the standard PhysGen-Dataset it was not implemented yet to get only the reflections as target (after this experiment this got then implemented).
 		
 		% Implementation & Challenges
 		
+		Figure \ref{fig:exp-1-example-inference} shows that the predictions of this model differ from the ground truth and is heavily noisy. Hence the numerical metrics are very high and can be seen in \ref{tab:performance_base_with_exp_1}.
 		
 		% Results
-		bad...show image,...
+	
+		\begin{table}[h!]
+			\centering
+			\begin{tabular}{|l|c|c|c|c|}
+				\hline
+				\textbf{Model} & \textbf{LoS MAE} & \textbf{NLoS MAE} & \textbf{LoS wMAPE} & \textbf{NLoS wMAPE} \\
+				\hline
+				Pix2Pix & 2.14 & 4.79 & 11.30 & 30.67 \\
+				DDBM & \textbf{1.93} & 6.38 & 18.34 & 79.13 \\
+				Full Glow & 2.06 & \textbf{3.64} & \textbf{8.98} & \textbf{22.69} \\
+				Residual with Previous Parameters & 49.60 & 60.05 & 134.81 & 176.76 \\
+				\hline
+			\end{tabular}
+			\caption{Performance from a Pix2Pix Residual Design Model trained with the best found parameters on few-building dataset compared with the baseline results on Physgen Reflection Test Dataset.}
+			\label{tab:performance_base_with_exp_1}
+		\end{table}
+		\FloatBarrier
 		
 		The reason for these low accuracy results could be the higher complexity of the dataset.\\
-		Hence we started a deeper investigation towards the improvement of predicting reflections by adding additional information to reduce the lernable complexity, see section \ref{cha:experiment-reflection-additional_physics}.
+		Therefore we started a deeper investigation towards the improvement of predicting reflections by adding additional information to reduce the lernable complexity, see section \ref{cha:experiment-reflection-additional_physics}. We also implemented the only reflection for the PhysGen Data with Pix2Pix model, to investigate the problem in more detail and without any possible intereference from the residual model architecture.
 		
+		\begin{figure}[ht]
+			\centering
+			\includegraphics[width=\linewidth]{../../uploaded/res/visualized/final_app_samples_pix2pix_cfo_adjusted_losses_2_1_0_physgen_34epochs.png}
+			\caption{Example Predictions from trained Residual Design model with successfull parameter settings with few building dataset from previous experiment. The rows are different samples. The columns contain the input image, prediction, ground truth and the difference of prediction and ground truth in this order from left to right.}
+			\label{fig:exp-1-example-inference}
+		\end{figure}
+		\FloatBarrier
 		
+	\clearpage
 	
 	\section{Only Reflections with additional Physical Information}
 	\label{cha:experiment-reflection-additional_physics}
 		% Description
-		
+		This experiment builds directly on top of experiment \ref{cha:experiment-only-reflections} which created the need for new solutions in order to overcome the complexity of the PhysicsGen-Dataset. We propose the idea to expand the input by additional physical information with simplified ray-tracing computations. An example is provided by figure \ref{fig:img-phy-sim-1}. \\
+		In theory this should reduce the learning to: learning a more detailed version of the reflections and add energy dynamics of the noise. Before the model had to learn the whole reflections by itself now it just have to improve existing reflections.
 		
 		% Implementation & Challenges
-		
+		The additional physical information is computed by our own simulation framework which is described in detail in section \ref{cha:ray-tracing-framework}.
 		
 		% Results
 		
+		The results of this experiment might suprises as table \ref{tab:performance_base_with_exp_2} shows. The additional physical information did not improve the learning. Possibly additional physical information does not help learning for this problem in general (which sounds counter-intuitiv), or providing it as second channel without special merging hinder the learning. A last theory is that the provided additional physical information is suboptimal, maybe wrong or just not accurate enough to shrink the task of the model.
+		
+		The fact that we spot a slightly worse accuracy with additional physical information hints towards one of the last 2 theories: suboptimal addtitional data or the adding process as second channel is the limitation. Hence we made a own section (\ref{cha:experiment-investigation-additional_physics}) to analyze the additional physical information closer.
+		
+		Example predictions are available at figure \ref{fig:exp-2-example-inference}.
+		
+		% final_app_samples_pix2pix_ips_36_one_channel_physgen_1_0_7epochs_nipy
+		% final_app_samples_pix2pix_l1_loss_1_0_physgen_only_reflection_50epochs_osm_baseline.png
+		% final_app_samples_pix2pix_1_0_ips_36_channels_50epochs
+		% final_app_samples_pix2pix_1_0_ips_36_one_channel_50epochs
+		% final_app_samples_pix2pix_1_0_ips_360_one_channel_50epochs
+		
+		% _nipy
+		
+		\vspace{1cm}
+		
+		\begin{table}[h!]
+			\centering
+			\begin{tabular}{|l|c|c|c|c|}
+				\hline
+				\textbf{Model} & \textbf{LoS MAE} & \textbf{NLoS MAE} & \textbf{LoS wMAPE} & \textbf{NLoS wMAPE} \\
+				\hline
+				Standard Pix2Pix & 1.01 & 7.23 & 1.51 & 17.83 \\
+				Pix2Pix 36 Rays as one extra channel & 1.10 & 7.27 & 1.60 & 18.05 \\
+				% Pix2Pix 36 Rays as only input & 1.10 & 7.29 & 1.62 & 18.41 \\
+				% Pix2Pix 36 Rays as 36 additional channels &  &  &  &  \\
+				% Pix2Pix 360 Rays as one additional channel &  &  &  &  \\
+				\hline
+			\end{tabular}
+			\caption{Performance comparison of Pix2Pix models on \textbf{Physgen Reflection Test Dataset with only reflections as target} to analyze the influence of additional physical information on the accuracy.}
+			\label{tab:performance_base_with_exp_2}
+		\end{table}
+		\FloatBarrier
+		
+		\vspace{2cm}
+		
+		Notice that we made more experiments, like only ray-traces as input or using 360 rays instead of 36 but these results are not relevant enough to show.
+		
+		\begin{figure}[ht]
+			\centering
+			\includegraphics[width=\linewidth]{../../uploaded/res/visualized/final_app_samples_pix2pix_l1_loss_1_0_physgen_only_reflection_50epochs_ips_36_one_channel_nipy.png}
+			\caption{Example Predictions from trained Pix2Pix model with 36 ray-traces as one additional channel with PhysicsGen Test dataset from previous experiment. The rows are different samples. The columns contain the input image, prediction, ground truth and the difference of prediction and ground truth in this order from left to right.}
+			\label{fig:exp-2-example-inference}
+		\end{figure}
+		\FloatBarrier
+		
+	\clearpage
 		
 	\section{Investigation into additional Physical Information}
 	\label{cha:experiment-investigation-additional_physics}
 		% Description
-		
+		The previous experiment (\ref{cha:experiment-reflection-additional_physics}) opened questions about the helpfulness and accuracy of the current ray-tracing which is used as addition information in the learning process of a Pix2Pix model.\\
+		First we introduce our error metrice, which is simply the Recall, Precision and F1-Score of the binarized reflection images. The binariztion is needed in order to compute these metrices.\\
+		The code for it is showed in a simplified version in listing \ref{lst:example-eval-code}.
 		
 		% Implementation & Challenges
+		
+		\begin{lstlisting}[language=Python,caption=Compute Eval Metrices(Pseudo-Code), label=lst:example-eval-code]
+	def calc_metrices(rays, noise_modelling_gt):
+			# rays to rays_img
+			# ... -> skipped here
+			
+			# Thresholding to binary images
+			noise_modelling_gt_binary = noise_modelling_gt != 0.0
+			rays_binary = ray_img != 0.0
+			
+			# Calculate Recall, Precision, F1 Score
+			overlap = noise_modelling_gt_binary * rays_binary
+			
+			#     recall - how is the coverage towards the gt?
+			recall = np.sum(overlap) / np.sum(noise_modelling_gt_binary)
+			
+			#     precision - how many rays hit the right place?
+			precision = np.sum(overlap) / np.sum(rays_binary)
+			
+			#     f1
+			f1 = 2*(precision*recall) / (precision+recall)
+			
+			return f1, recall, precision
+		\end{lstlisting}
+	
+		Second, we computed these metrices on all images of the Testdataset from the PhysicsGen-Benchmark for the ground-truth reflections and our classical ray-tracing. The results are shown in table \ref{tab:performance_comparison_with_exp_3}.
+	
+		When applying the defined metrices on the ground truth reflection themselves we should get the best result of 1.0 and this exactly what we observe in the results.\\ This experiment also solves the concerns of previous experiments and shows that the ray-traces are not good representitives (simplified versions) of the ground truth rays and therefore not helpful. % Table \ref{tab:performance_comparison_with_exp_3} shows the metrices for the ray-traces.
+		
+		We did not stop here, we wanted to know why the ray-traces are so different from the reflections from PhysicsGen Dataset and therefore how we can change the computation of our reflections in order to get a better simplified version of the rel reflections.\\
+		After some reserch we found out that the ground truth reflections computed by the NoiseModelling software \cite{noisemodelling} works fundamentl different. Therefore we programmed ISM -> The different is described in section \ref{cha:ray-tracing-framework}.
+		
+		\begin{table}[h!]
+			\centering
+			\begin{tabular}{|l|c|c|c|}
+				\hline
+				\textbf{Model} & \textbf{Recall} & \textbf{Precision} & \textbf{F1-Score} \\
+				\hline
+				Ground Truth Ray-Tracing & & &  \\
+				Classical Ray-Tracing & & &  \\
+				ISM Ray-Tracing & & &  \\
+				\hline
+			\end{tabular}
+			\caption{Mean Recall, Precision and F1-Score for the ground truth reflection itself, calssical ray-tracing and ISM on all binarized PhysicsGen Testdata}
+			\label{tab:performance_comparison_with_exp_3}
+		\end{table}
+		\FloatBarrier
+		
 		
 		
 		% Results
 	
-	
+	\clearpage
 	
 	\section{Pre/Post-Masking}
 		% Description

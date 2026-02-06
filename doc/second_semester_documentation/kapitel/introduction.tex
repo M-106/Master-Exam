@@ -25,7 +25,25 @@
 	\end{enumerate}
 	These questions are designed to address known limitations of current learning-based approaches and to assess whether deep learning models can accurately capture complex physical interactions in an image-to-image setting.
 	
-	We hypothesize that incorporating additional physical information improves the prediction of physically complex regions in paired image-to-image translation. Specifically, we expect ray-tracing information to enhance model performance in regions governed by reflections, and masking strategies to focus learning on high-complexity areas. 
+	We hypothesize that incorporating additional physical information improves the prediction of physically complex regions in paired image-to-image translation. Specifically, we expect ray-tracing information to enhance model performance in regions governed by reflections, and masking strategies to focus learning on high-complexity areas.
+	
+	As previous we evaluate experiments with the state-of-the-art results from table \ref{tab:performance_base}. Notice that this baseline performance can not be used for experiments where we evaluate reflections as targets becauce of the different target.
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{|l|c|c|c|c|}
+			\hline
+			\textbf{Model} & \textbf{LoS MAE} & \textbf{NLoS MAE} & \textbf{LoS wMAPE} & \textbf{NLoS wMAPE} \\
+			\hline
+			Pix2Pix & 2.14 & 4.79 & 11.30 & 30.67 \\
+			DDBM & \textbf{1.93} & 6.38 & 18.34 & 79.13 \\
+			Full Glow & 2.06 & \textbf{3.64} & \textbf{8.98} & \textbf{22.69} \\
+			\hline
+		\end{tabular}
+		\caption{Performance comparison of base models on Physgen Reflection Test Dataset.}
+		\label{tab:performance_base}
+	\end{table}
+	%\FloatBarrier
+	 
 	
 	%(In future add results here -> results are not there yet)\\
 	%Our investigations reveal …

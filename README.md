@@ -146,13 +146,28 @@ Coming:
 
 
 
-**18.10.2025 Weekly Meeting**<br>
+**01.02.2026 Weekly Meeting**<br>
 
 Participants: Keuper, Martin, Ich<br>
 Location: Google Meeting<br>
 Time: 11:35 O'Clock
 
 - ...
+
+
+
+**06.02.2026 Weekly Meeting**<br>
+
+Participants: Keuper, Martin, Ich<br>
+Location: Google Meeting<br>
+Time: 11:35 O'Clock
+
+- ISM Optimieren -> numba -> compile + parallel + cuda
+- Speichern und Laden möglich machen
+- In PhysGen Datensatz integrieren
+- Differenz von Ground Truth und ISM visuell anschauen
+
+
 
 **16.01.2026 Weekly Meeting**<br>
 
