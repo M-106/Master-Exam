@@ -28,17 +28,27 @@
 	We hypothesize that incorporating additional physical information improves the prediction of physically complex regions in paired image-to-image translation. Specifically, we expect ray-tracing information to enhance model performance in regions governed by reflections, and masking strategies to focus learning on high-complexity areas.
 	
 	As previous we evaluate experiments with the state-of-the-art results from table \ref{tab:performance_base}. Notice that this baseline performance can not be used for experiments where we evaluate reflections as targets becauce of the different target.
+	
+	\vspace{1.0cm}
+	
 	\begin{table}[h!]
 		\centering
-		\begin{tabular}{|l|c|c|c|c|}
-			\hline
+		%\begin{adjustwidth}{0cm}{0cm}
+		\begin{tabularx}{0.828\linewidth}{l r r r r}
+			\toprule
+		%\begin{tabular}{|l|c|c|c|c|}
+			%\hline
 			\textbf{Model} & \textbf{LoS MAE} & \textbf{NLoS MAE} & \textbf{LoS wMAPE} & \textbf{NLoS wMAPE} \\
-			\hline
+			%\hline
+			\midrule
 			Pix2Pix & 2.14 & 4.79 & 11.30 & 30.67 \\
 			DDBM & \textbf{1.93} & 6.38 & 18.34 & 79.13 \\
 			Full Glow & 2.06 & \textbf{3.64} & \textbf{8.98} & \textbf{22.69} \\
-			\hline
-		\end{tabular}
+			%\hline
+			\bottomrule
+		%\end{tabular}
+		\end{tabularx}
+		%\end{adjustwidth}
 		\caption{Performance comparison of base models on Physgen Reflection Test Dataset.}
 		\label{tab:performance_base}
 	\end{table}

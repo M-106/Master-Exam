@@ -11,6 +11,8 @@
 	% Show short usage code + href to the 
 	Listing \ref{lst:example-framework-1} show the general usage to using ray-tracing with our framework.
 	
+	\vspace{0.5cm}
+	
 	\begin{lstlisting}[language=Python,caption=Tracing Rays using our Framework (Pseudo-Code), label=lst:example-framework-1]
 		rays = ips.ray_tracing.trace_beams(...)
 		ips.ray_tracing.print_rays_info(rays)
@@ -20,10 +22,11 @@
 	\end{lstlisting}
 
 	And Listing \ref{lst:example-framework-2} show the general usage to using ISM-ray-tracing with our framework.
+	
+	\vspace{0.5cm}
 
 	\begin{lstlisting}[language=Python,caption=Tracing Rays using our Framework via ISM (Pseudo-Code), label=lst:example-framework-2]
 		reflection_map = ips.ism.compute_reflection_map(...)
-		
 		ips.img.imshow(reflection_map, size=5)
 	\end{lstlisting}
 
