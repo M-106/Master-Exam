@@ -1,16 +1,18 @@
 \chapter{Summary}
 \label{cha:summary}
-	
-	
+
+
 	\section{Achievements}
 	\label{sec:sum-reached}
-		Our Experiments 
+		Our first experiment shows that the prediction of reflections is still a hard challenge in more complex scenarios. We deduce this from the poor results of the first experiment, and the second experiment confirms this.\\
+		Our approach to overcome this challenge by adding additional physical information via approximated reflections (classical ray-traces) does not work either and even slightly worsened the accuracy on the PhysicsGen benchmark. This led to a deeper investigation into evaluating the reflection approximation separately to determine whether these bad results were caused by a poor approximation. This investigation then proved that our classical ray-tracing is indeed a poor approximation of the ground truth reflections and led us to propose a better reflection approximation via the Image Source Method, which we optimized using Numba to achieve a speedup of about 900x, making it practical for training.
+		
+		Additionally, we show that masking the samples during training does not lead to higher accuracy. Starting the training with masking and then learning normally (without masking) even seems to harm the learning process by introducing a visible systematic shift in the predictions. However, first learning normally and then applying masking does not harm learning. Although post-masking helps dominant components, it does not fix NLoS relative errors.
 	
 	\section{Future}
 	\label{sec:sum-future}
-		Coming soon...
-		
-		
+		From our work, there are clear next steps. Given the substantial improvement in precision and F1-score, the improved ISM reflections represent a promising direction that could potentially lead to state-of-the-art performance on the PhysicsGen benchmark. \\
+		Using our ISM reflections, a Pix2Pix model should be trained to evaluate the performance of the improved additional physical information on the PhysicsGen benchmark. We suggest trying the improved approximated reflections alone and as a second channel. These results can then be compared to our findings in Table \ref{tab:performance_comparison_with_exp_3}.
 		
 	
 	

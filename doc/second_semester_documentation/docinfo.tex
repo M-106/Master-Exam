@@ -20,7 +20,7 @@
 \newcommand{\hsmaort}{Offenburg}    % Ort
 \newcommand{\hsmaautorvname}{Tobia} % Vorname(n)
 \newcommand{\hsmaautornname}{Ippolito} % Nachname(n)
-\newcommand{\hsmadatum}{12.03.2027} % Datum der Abgabe
+\newcommand{\hsmadatum}{26.02.2026} % Datum der Abgabe
 \newcommand{\hsmajahr}{2026} % Jahr der Abgabe
 \newcommand{\hsmafirma}{IMLA, Herrenknecht Vertical GmbH and "KI-Bohrer" Projekt} % Firma bei der die Arbeit durchgeführt wurde
 \newcommand{\hsmabetreuer}{Prof. Dr. rer. nat. Keuper Janis, Hochschule Offenburg} % Betreuer an der Hochschule
@@ -37,10 +37,19 @@
 % Abstract
 
 % Kurze (maximal halbseitige) Beschreibung, worum es in der Arbeit geht auf Deutsch
-\newcommand{\hsmaabstractde}{We introduce our Image-Physics-Simulation Framework, for 2D Image ray-tracing (classical and Image Source Method) to enrich the input of deep learning models with additional physical information to predict reflections evaluted on the PhysicsGen Benchmark for noisedata prediction in urban areas.\\
-While classical ray-tracing seem to be not effective for the prediction of reflection, we see potential in ISM ray-traces based on a F1-score with the ground truth but without a model training yet.\\
-Additional experiments show that pre and post masking does not help learning complex relationships on the PhysicsGen dataset.}
+\newcommand{\hsmaabstractde}{
+DEUTSCHE VERSION...
+}
 
 % Kurze (maximal halbseitige) Beschreibung, worum es in der Arbeit geht auf Englisch
 
-\newcommand{\hsmaabstracten}{Englische Version von Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.}
+\newcommand{\hsmaabstracten}{%We introduce our Image-Physics-Simulation Framework, for 2D Image ray-tracing (classical and Image Source Method) to enrich the input of deep learning models with additional physical information to predict reflections evaluted on the PhysicsGen Benchmark for noisedata prediction in urban areas.\\
+	%While classical ray-tracing seem to be not effective for the prediction of reflection, we see potential in ISM ray-traces based on a F1-score with the ground truth but without a model training yet.\\
+	%Additional experiments show that pre and post masking does not help learning complex relationships on the PhysicsGen dataset.
+	We introduce the Image-Physics-Simulation (IPS) Framework for 2D image-based ray-tracing, including both classical ray-tracing and the Image Source Method (ISM), to enrich deep learning inputs with additional physical information for the prediction of reflections. % The framework is evaluated on the PhysicsGen benchmark for urban noise propagation prediction via F1-Score, Recall and Precision.
+	
+	Our experiments show that predicting reflections from noise sound propagation in complex urban scenarios remains a challenging task. Direct reflection prediction on PhysicsGen leads to poor results, and augmenting the input with classical ray-tracing as additional physical information does not improve performance. It slightly even worsens the accuracy. A detailed evaluation using recall, precision, and F1-score reveals that classical ray-tracing is a poor approximation of the ground-truth reflections.
+	
+	To address this limitation, we implement the Image Source Method and evaluate its similarity to the ground truth. ISM significantly improves precision and F1-score compared to classical ray-tracing and random baselines. 
+	
+	Additional experiments investigating pre- and post-masking strategies show that masking does not improve overall performance. Pre-masking even harms learning by introducing systematic prediction shifts, while post-masking improves dominant components but does not resolve large relative errors in non-line-of-sight (NLoS) regions.}

@@ -1,4 +1,14 @@
 \chapter{Previous Experiments}
 \label{cha:previous_experiments}
-
-	Cooming Soon...
+	In our previous work, we conducted multiple experiments aimed at improving performance on the PhysicsGen benchmark. In contrast to this work, we applied most experiments to a simplified version of the official PhysicsGen dataset in order to develop and test ideas more quickly and afterwards transfer the successful methods to the more complex PhysicsGen benchmark.\\
+	We showed that providing the base simulation as input improves overall accuracy compared to purely end-to-end approaches. However, this input alone is not sufficient to learn the complex propagation behavior of reflections.
+	
+	To address training instability, we investigated stabilizing the adversarial loss using Wasserstein loss with gradient penalty. Contrary to expectations, this modification did not improve performance and instead led to worse predictions. Therefore, this approach was not pursued further.
+	
+	In addition to the pix2pix model, several alternative architectures were evaluated. Although none achieved state-of-the-art performance, these negative results do not exclude the possibility that better-suited architectures exist. We suggested experiments towards scaling which will not be the focus of this work.
+	
+	A central idea, from our previous work which also finds usage in this work, was to separate the prediction of reflections from the base sound propagation, resulting in the so-called Residual Design Model consisting of two Pix2Pix networks. The first model predicts the base propagation, while the second focuses exclusively on the reflection component.\\
+	Most importantly, we identified parameter configurations (in a deeper investigation) that successfully predicted reflections in simplified scenarios with fewer buildings. While this setup did not yet achieve perfect results compared to the reflections from the simplified dataset, the partially successful engineering of reflection-only prediction demonstrated that the residual design is a viable and promising direction.
+	
+	Overall, we decided to continue refining and evaluating the separate prediction of reflections due to the promising results obtained so far and the demonstrated potential of this approach.
+	
