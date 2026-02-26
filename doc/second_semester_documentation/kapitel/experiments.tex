@@ -109,7 +109,10 @@
 		
 		\vspace{1cm}
 		
-		Note that we conducted additional experiments, such as using only ray-traces as input or using 360 rays instead of 36, but these results were not relevant enough to present.
+		\begin{tcolorbox}[colback=yellow!10, colframe=red!80!black, title=Notice]
+			Note that we conducted additional experiments, such as using only ray-traces as input or using 360 rays instead of 36, but these results were not relevant enough to present.
+		\end{tcolorbox}
+		
 		
 		\begin{figure}[ht]
 			\centering
@@ -162,7 +165,7 @@
 		However, without sufficient recall, this information would have little value. For example, if an algorithm predicts only a single true positive and classifies all remaining samples as negative, this would result in maximum precision due to the absence of false positives, while the overall result would contain almost no useful information. Therefore, the F1-score is also an important metric to consider, while keeping in mind that, for our purposes, precision is more important than recall.
 		
 		When applying the defined metrics to the ground-truth reflections themselves, we should obtain the best possible result of 1.0, and this is exactly what we observe in our results.\\ 
-		This experiment also addresses the concerns from previous experiments and shows that the (classical) ray-traces, computed by our framework, are not good representatives (simplified versions) of the ground-truth reflections and are therefore not helpful. Table \ref{tab:performance_comparison_with_exp_3} shows that the precision of the (classical) ray-traces is only 7\% higher than that of random sampling. The very low recall value (and therefore also the low F1-score) would not be problematic if the precision were higher. The rays are single lines and do not cover as much area as the ground truth, which is acceptable when providing additional information.
+		This experiment also addresses the concerns from previous experiments and shows that the (classical) ray-traces, computed by our framework, are not good representatives (simplified versions) of the ground-truth reflections and are therefore not helpful. Table \ref{tab:performance_comparison_with_exp_3} shows that the precision of the (classical) ray-traces is only 7\% higher than that of random sampling. The very low recall value (and therefore also the low F1-score) would not be problematic if the precision were higher. The rays are single lines and do not cover as much area as the ground truth, which would be acceptable for providing additional information if they would be more accurate.
 		% Table \ref{tab:performance_comparison_with_exp_3} shows the metrices for the ray-traces.
 		
 		We did not stop here, we wanted to understand why the ray-traces differ so much from the reflections in the PhysicsGen dataset and how we could modify the computation of our reflections to obtain a better simplified version of the real reflections.\\
